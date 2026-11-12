@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUMPRODUCT</title>
+    <style>
+        body { font-family: 'Malgun Gothic', sans-serif; background-color: #f3f2f1; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 30px; }
+        .title-banner { background-color: #107C41; color: white; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 25px; }
+        .header-title { font-size: 28px; margin: 0; font-weight: 800; letter-spacing: 1px; }
+        .section-title { font-size: 18px; color: #107C41; border-bottom: 2px solid #107C41; padding-bottom: 5px; margin-top: 25px; margin-bottom: 10px; font-weight: bold; }
+        .explanation { font-size: 15px; background: #e8f5e9; padding: 15px; border-radius: 6px; line-height: 1.6; }
+        .highlight { font-weight: bold; color: #d83b01; }
+        .usage-box { background: #f8f9fa; border: 1px dashed #c8c6c4; padding: 15px; border-radius: 6px; font-family: Consolas, monospace; font-size: 16px; color: #005fcc; font-weight: bold; }
+        .excel-ui { border: 1px solid #c8c6c4; border-radius: 4px; overflow: hidden; font-family: 'Segoe UI', sans-serif; margin-top: 20px; }
+        .formula-bar { display: flex; align-items: center; background: white; padding: 6px 10px; border-bottom: 1px solid #c8c6c4; }
+        .fx-icon { font-weight: bold; font-style: italic; color: #666; margin-right: 10px; user-select: none; }
+        .formula-input { flex-grow: 1; font-family: Consolas, monospace; font-size: 16px; letter-spacing: 0.5px; padding: 4px; }
+        .excel-table { width: 100%; border-collapse: collapse; background: white; text-align: center; }
+        .excel-table th { background: #f3f2f1; border: 1px solid #c8c6c4; font-weight: normal; color: #666; padding: 4px; }
+        .excel-table td { border: 1px solid #c8c6c4; padding: 8px; position: relative; }
+        .excel-table .row-header { background: #f3f2f1; color: #666; width: 30px; }
+        input[type="number"] { padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; text-align: center; width: 90px; }
+        input[type="number"]:focus { outline: 2px solid #107C41; }
+        .result-cell { font-weight: bold; color: #d83b01; background-color: #fff3e0; cursor: pointer; transition: background-color 0.2s; }
+        .result-cell:hover { background-color: #ffe0b2; }
+        .highlight-array1 { background-color: rgba(0, 120, 212, 0.1) !important; border-left: 2px solid #0078D4 !important; border-right: 2px solid #0078D4 !important; }
+        .highlight-array1.top { border-top: 2px solid #0078D4 !important; }
+        .highlight-array1.bottom { border-bottom: 2px solid #0078D4 !important; }
+        .highlight-array2 { background-color: rgba(216, 27, 96, 0.1) !important; border-left: 2px solid #D81B60 !important; border-right: 2px solid #D81B60 !important; }
+        .highlight-array2.top { border-top: 2px solid #D81B60 !important; }
+        .highlight-array2.bottom { border-bottom: 2px solid #D81B60 !important; }
+        .instruction { font-size: 14px; color: #666; margin-bottom: 10px; text-align: right; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="title-banner">
+        <h1 class="header-title">SUMPRODUCT</h1>
+    </div>
+    
+    <div class="section-title">1. 함수 역할</div>
+    <div class="explanation">
+        선택한 <strong>배열(범위)끼리 같은 위치에 있는 값들을 각각 곱한 뒤, 그 결과들의 합계</strong>를 한 번에 구해주는 함수입니다.<br>
+        ※ 단가와 수량을 곱해서 나오는 총 금액을 일일이 계산해서 더할 필요 없이 이 함수 하나로 끝낼 수 있습니다!
+    </div>
+
+    <div class="section-title">2. 사용 방법</div>
+    <div class="usage-box">
+        =SUMPRODUCT(배열1, 배열2)
+    </div>
+
+    <div class="section-title">3. 실습 예시</div>
+    <div class="instruction">💡 결과 셀(D6)을 클릭하면 수식 입력줄과 참조 영역이 강조됩니다!</div>
+    
+    <div class="excel-ui">
+        <div class="formula-bar">
+            <span class="fx-icon">fx</span>
+            <div class="formula-input" id="formula-display"></div>
+        </div>
+        <table class="excel-table">
+            <thead>
+                <tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="row-header">1</td>
+                    <td colspan="4" style="text-align: left; font-weight: bold; background: #e8f5e9;">[과일 가게 판매 기록]</td>
+                </tr>
+                <tr>
+                    <td class="row-header">2</td>
+                    <td style="background: #f3f2f1; font-weight:bold;">담당자</td>
+                    <td style="background: #f3f2f1; font-weight:bold;">단가 (원)</td>
+                    <td style="background: #f3f2f1; font-weight:bold;">판매 수량 (개)</td>
+                    <td style="background: #f3f2f1; font-weight:bold;">비고</td>
+                </tr>
+                <tr>
+                    <td class="row-header">3</td>
+                    <td>김지훈</td>
+                    <td class="array1 top"><input type="number" id="price1" value="1000" oninput="updateSUMPRODUCT()"></td>
+                    <td class="array2 top"><input type="number" id="qty1" value="5" oninput="updateSUMPRODUCT()"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="row-header">4</td>
+                    <td>이서연</td>
+                    <td class="array1"><input type="number" id="price2" value="1500" oninput="updateSUMPRODUCT()"></td>
+                    <td class="array2"><input type="number" id="qty2" value="3" oninput="updateSUMPRODUCT()"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="row-header">5</td>
+                    <td>박민준</td>
+                    <td class="array1 bottom"><input type="number" id="price3" value="2000" oninput="updateSUMPRODUCT()"></td>
+                    <td class="array2 bottom"><input type="number" id="qty3" value="4" oninput="updateSUMPRODUCT()"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="row-header">6</td>
+                    <td colspan="2" style="text-align: right; font-weight: bold;">총 매출액:</td>
+                    <td colspan="2" class="result-cell" id="resTotal" onclick="showFormula()"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function highlightExcelFormula(text) {
+        const bracketColors = ['#D81B60', '#009688', '#8E24AA', '#1E88E5'];
+        let depth = 0;
+        let result = "";
+        const tokens = text.split(/([()])/);
+        
+        for (let token of tokens) {
+            if (token === '(') {
+                let color = bracketColors[depth % bracketColors.length];
+                result += `<span style="color:${color}; font-weight:900;">(</span>`;
+                depth++;
+            } else if (token === ')') {
+                depth--;
+                let colorIndex = Math.max(0, depth);
+                let color = bracketColors[colorIndex % bracketColors.length];
+                result += `<span style="color:${color}; font-weight:900;">)</span>`;
+            } else {
+                let coloredToken = token
+                    .replace(/(SUMPRODUCT)/g, '<span style="color:#005fcc; font-weight:bold;">$1</span>')
+                    .replace(/(B3:B5)/g, '<span style="color:#0078D4; font-weight:bold;">$1</span>')
+                    .replace(/(C3:C5)/g, '<span style="color:#D81B60; font-weight:bold;">$1</span>');
+                result += coloredToken;
+            }
+        }
+        return result;
+    }
+
+    function updateSUMPRODUCT() {
+        const p1 = parseFloat(document.getElementById('price1').value) || 0;
+        const p2 = parseFloat(document.getElementById('price2').value) || 0;
+        const p3 = parseFloat(document.getElementById('price3').value) || 0;
+        
+        const q1 = parseFloat(document.getElementById('qty1').value) || 0;
+        const q2 = parseFloat(document.getElementById('qty2').value) || 0;
+        const q3 = parseFloat(document.getElementById('qty3').value) || 0;
+        
+        const total = (p1 * q1) + (p2 * q2) + (p3 * q3);
+        document.getElementById('resTotal').innerText = total.toLocaleString() + " 원";
+        
+        showFormula();
+    }
+
+    function showFormula() {
+        const elArray1 = document.querySelectorAll('.array1');
+        const elArray2 = document.querySelectorAll('.array2');
+        
+        elArray1.forEach(el => el.classList.add('highlight-array1'));
+        elArray2.forEach(el => el.classList.add('highlight-array2'));
+        
+        let formulaStr = `=SUMPRODUCT(B3:B5, C3:C5)   // 단가범위 × 수량범위 곱의 합`;
+        document.getElementById('formula-display').innerHTML = highlightExcelFormula(formulaStr);
+    }
+
+    updateSUMPRODUCT();
+</script>
+
+</body>
+</html>
